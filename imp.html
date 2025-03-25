@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Image Slider with Prev/Next</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; }
+        .slider {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            margin: auto;
+            overflow: hidden;
+        }
+        .slides {
+            display: flex;
+            transition: transform 1s ease-in-out;
+            width: 300%; /* Adjust according to the number of slides */
+        }
+        .slide {
+            width: 100%;
+            flex-shrink: 0;
+        }
+        img {
+            width: 100%;
+            display: block;
+        }
+        .controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .prev, .next {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider">
+        <div class="slides" id="slides">
+            <div class="slide"><img src="./Images/1.jpg" alt="Slide 1"></div>
+            <div class="slide"><img src="./Images/4.jpg" alt="Slide 2"></div>
+            <div class="slide"><img src="./Images/2.jpg" alt="Slide 3"></div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="controls">
+            <button class="prev" id="prev">Prev</button>
+            <button class="next" id="next">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.getElementById('slides');
+        const totalSlides = slides.children.length;
+
+        // Move slides automatically every 3 seconds
+        const autoSlide = () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlidePosition();
+        };
+
+        // Update slide position
+        const updateSlidePosition = () => {
+            const offset = -currentSlide * 100;
+            slides.style.transform = `translateX(${offset}%)`;
+        };
+
+        // Next slide
+        const nextSlide = () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlidePosition();
+            resetAutoSlide(); // Reset auto-slide timer
+        };
+
+        // Previous slide
+        const prevSlide = () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlidePosition();
+            resetAutoSlide(); // Reset auto-slide timer
+        };
+
+        // Reset the auto-slide interval when manually navigating
+        let slideInterval = setInterval(autoSlide, 3000);
+
+        const resetAutoSlide = () => {
+            clearInterval(slideInterval); // Clear existing interval
+            slideInterval = setInterval(autoSlide, 3000); // Restart auto-slide
+        };
+
+        // Add event listeners to buttons
+        document.getElementById('next').addEventListener('click', nextSlide);
+        document.getElementById('prev').addEventListener('click', prevSlide);
+
+    </script>
+
+</body>
+</html>
